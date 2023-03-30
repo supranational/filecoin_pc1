@@ -17,7 +17,7 @@ We will specify a reference configuration with the final release of the software
 - Threadripper PRO 5975WX
 - ASUS WRX80E SAGE Motherboard
 - 256GB Memory
-- 15 Samsung 7.68GB U.2 Drives
+- 15 Samsung 7.68TB U.2 Drives
 - 4 Supermicro AOC-SLG4-4E4T NVMe HBA 
 
 # Building
