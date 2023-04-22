@@ -3,6 +3,8 @@
 #ifndef __NODE_RW_T_HPP__
 #define __NODE_RW_T_HPP__
 
+#include <mutex>
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // On disk node storage and addressing

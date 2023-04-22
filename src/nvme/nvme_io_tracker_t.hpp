@@ -7,6 +7,10 @@
 class nvme_io_tracker_t;
 typedef int (*completion_cb_t)(void *arg);
 
+class nvme_controller_t;
+class nvme_namespace_t;
+class nvme_qpair_t;
+
 class nvme_io_tracker_t {
 public:
   friend class nvme_controller_t;
@@ -32,7 +36,7 @@ public:
   }
 
   size_t len() {
-    return BLOCK_SIZE;
+    return PAGE_SIZE;
   }
 };
 

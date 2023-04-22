@@ -13,7 +13,7 @@ set -x
 # ./configure --with-virtio --with-vhost
 # make
 # sudo ./scripts/setup.sh
-SPDK="../spdk"
+SPDK="../spdk-v22.09"
 
 CPPFLAGS="-fno-omit-frame-pointer -g -O2 -Wall -Wextra -Wno-unused-parameter \
           -Wno-missing-field-initializers -fno-strict-aliasing \
@@ -108,5 +108,5 @@ c++ $CPPFLAGS $INCLUDE -o obj/pc1.o -c src/sealing/pc1.cpp
 c++ $CPPFLAGS $INCLUDE -o obj/debug_helpers.o -c src/util/debug_helpers.cpp
 c++ $CPPFLAGS $INCLUDE -o obj/replica_id.o -c src/sealing/replica_id.cpp
 c++ -g -o pc1 obj/pc1.o obj/debug_helpers.o obj/replica_id.o \
-    obj/sha_ext_mbx2.o $LDFLAGS -lprofiler ../blst/libblst.a
+    obj/sha_ext_mbx2.o $LDFLAGS ../blst/libblst.a
 

@@ -5,9 +5,6 @@
 
 #include <stdint.h>
 #include <stdio.h>
-extern "C" {
-#include <rte_ring.h>
-}
 #include <vector>
 #include <atomic>
 
@@ -23,16 +20,18 @@ class mt_fifo_t {
 
   // TODO: use atomics for head and tail, check perf impact
   // 'head' tracks the next unused element.
-  size_t head;
+  volatile size_t head;
   // 'tail' tracks the last used element
-  size_t tail;
+  volatile size_t tail;
   
 public:
   mt_fifo_t() : head(0), tail(0) {
     contents = nullptr;
   }
   ~mt_fifo_t() {
+#ifndef NO_SPDK
     spdk_free(contents);
+#endif
   }
 
   int create(const char *name, size_t count) {
@@ -90,6 +89,7 @@ public:
   // Fill the pool
   // One element of store is left empty since the pool can hold
   // size() - 1 of usable data.
+#ifndef NO_SPDK
   int fill() {
     contents = (T*)spdk_dma_zmalloc(sizeof(T) * (store.size() - 1),
                                     PAGE_SIZE, NULL);
@@ -103,7 +103,8 @@ public:
     
     return 0;
   }
-
+#endif
+  
   // Number of used entries in the ring
   size_t size() {
     // Load values so we can perform a consistent calculation
@@ -156,7 +157,9 @@ public:
     tail = 0;
   }
   ~pool_t() {
+#ifndef NO_SPDK
     spdk_free(contents);
+#endif
   }
 
   int create(size_t _count) {
@@ -202,6 +205,7 @@ public:
   // Fill the pool
   // One element of store is left empty since the pool can hold
   // size() - 1 of usable data.
+#ifndef NO_SPDK
   int fill() {
     contents = (T*)spdk_dma_zmalloc(sizeof(T) * (store.size() - 1),
                                     PAGE_SIZE, NULL);
@@ -215,6 +219,7 @@ public:
     
     return 0;
   }
+#endif
 
   // Number of used entries in the ring
   size_t size() {

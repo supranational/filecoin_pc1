@@ -5,7 +5,8 @@
 
 #include <cstdint>
 #include "constants.hpp"
-#include "../nvme/nvme.hpp"
+#include "../nvme/ring_t.hpp"
+#include "../nvme/nvme_io_tracker_t.hpp"
 
 // One node worth of parallel sectors
 struct node_t {

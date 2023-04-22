@@ -782,26 +782,26 @@ public:
              (double)mbytes / ((double)ms / 1000.0),
              (double)nodes_rw / ((double)ms / 1000.0));
     }
-    printf("orchestrator_t outstanding_writes       %ld\n", outstanding_writes);
-#ifdef TSC
-    printf("orchestrator_t loop_cycles              %lu\n", loop_cycles);
-    printf("orchestrator_t parent_cycles            %lu\n", parent_cycles);
-    printf("orchestrator_t min_node_cycles          %lu\n", min_node_cycles);
-    printf("orchestrator_t read_batch_cycles        %lu\n", read_batch_cycles);
-    printf("orchestrator_t   rb_check_buf_cycles    %lu\n", rb_check_buf_cycles);
-    printf("orchestrator_t   rb_reserve_buf_cycles  %lu\n", rb_reserve_buf_cycles);
-    printf("orchestrator_t   rb_special_case_cycles %lu\n", rb_special_case_cycles);
-    printf("orchestrator_t   rb_cache_params_cycles %lu\n", rb_cache_params_cycles);
-    printf("orchestrator_t   rb_parents_cycles      %lu\n", rb_parents_cycles);
-    printf("orchestrator_t   rb_send_cycles         %lu\n", rb_send_cycles);
-    printf("orchestrator_t write_cycles             %lu\n", write_cycles);
-    printf("orchestrator_t release_parent_cycles    %lu\n", release_parent_cycles);
-    printf("orchestrator_t advance_written_cycles   %lu\n", advance_written_cycles);
-    printf("orchestrator_t advance_tail_cycles      %lu\n", advance_tail_cycles);
-    printf("orchestrator_t noaction_cycles          %lu\n", noaction_cycles);
-#endif
+//     printf("orchestrator_t outstanding_writes       %ld\n", outstanding_writes);
+// #ifdef TSC
+//     printf("orchestrator_t loop_cycles              %lu\n", loop_cycles);
+//     printf("orchestrator_t parent_cycles            %lu\n", parent_cycles);
+//     printf("orchestrator_t min_node_cycles          %lu\n", min_node_cycles);
+//     printf("orchestrator_t read_batch_cycles        %lu\n", read_batch_cycles);
+//     printf("orchestrator_t   rb_check_buf_cycles    %lu\n", rb_check_buf_cycles);
+//     printf("orchestrator_t   rb_reserve_buf_cycles  %lu\n", rb_reserve_buf_cycles);
+//     printf("orchestrator_t   rb_special_case_cycles %lu\n", rb_special_case_cycles);
+//     printf("orchestrator_t   rb_cache_params_cycles %lu\n", rb_cache_params_cycles);
+//     printf("orchestrator_t   rb_parents_cycles      %lu\n", rb_parents_cycles);
+//     printf("orchestrator_t   rb_send_cycles         %lu\n", rb_send_cycles);
+//     printf("orchestrator_t write_cycles             %lu\n", write_cycles);
+//     printf("orchestrator_t release_parent_cycles    %lu\n", release_parent_cycles);
+//     printf("orchestrator_t advance_written_cycles   %lu\n", advance_written_cycles);
+//     printf("orchestrator_t advance_tail_cycles      %lu\n", advance_tail_cycles);
+//     printf("orchestrator_t noaction_cycles          %lu\n", noaction_cycles);
+// #endif
     
-    print_stats();
+//     print_stats();
     return 0;
   }
 

@@ -243,7 +243,8 @@ public:
 #endif
 
     // Periodically print the hash result
-    if ((node.node() & ((NODE_COUNT / 4) - 1)) == 0) {
+    if (offset_id == 0 && thread_id == 0 && 
+        (node.node() & ((NODE_COUNT / 4) - 1)) == 0) {
       unique_lock<mutex> lck(print_mtx);
       printf("H %3ld T %3ld node %lx hasher out %p: ",
              offset_id, thread_id, node.id(), hash_out->sectors[offset_id]);
@@ -326,17 +327,17 @@ public:
 
     per_thread_t* replicaId = &thr_data[thr_count];
 
-    {
-      unique_lock<mutex> lck(print_mtx);
+    // {
+    //   unique_lock<mutex> lck(print_mtx);
 
-      printf("Starting hasher %ld thread %ld offset_id %ld\n", id, thr_count, offset_id);
-      // print_digest(&(replicaId->replica_id_buffer.ids[0][0]));
-      // print_digest(&(replicaId->replica_id_buffer.cur_loc[0][0]));
-      // print_digest(&(replicaId->replica_id_buffer.pad_0[0][0]));
-      // print_digest(&(replicaId->replica_id_buffer.pad_1[0][0]));
-      // print_digest(&(replicaId->replica_id_buffer.padding[0][0]));
-      // printf("\n");
-    }
+    //   //printf("Starting hasher %ld thread %ld offset_id %ld\n", id, thr_count, offset_id);
+    //   // print_digest(&(replicaId->replica_id_buffer.ids[0][0]));
+    //   // print_digest(&(replicaId->replica_id_buffer.cur_loc[0][0]));
+    //   // print_digest(&(replicaId->replica_id_buffer.pad_0[0][0]));
+    //   // print_digest(&(replicaId->replica_id_buffer.pad_1[0][0]));
+    //   // print_digest(&(replicaId->replica_id_buffer.padding[0][0]));
+    //   // printf("\n");
+    // }
     
     while (thr_node < node_stop) {
       // Wait for the next node to be ready
@@ -411,13 +412,13 @@ public:
         coord_idx = coord_ring.incr(coord_idx);
       }
     }
-#ifdef HASHER_TSC
-    printf("Hasher %ld thr %ld: data_not_ready %ld, cycles_hashing %lu, cycles_other %lu\n",
-           id, thr_count, data_not_ready, cycles_hashing, cycles_other);
-#else
-    printf("Hasher %ld thr %ld: data_not_ready %ld\n",
-           id, thr_count, data_not_ready);
-#endif
+// #ifdef HASHER_TSC
+//     printf("Hasher %ld thr %ld: data_not_ready %ld, cycles_hashing %lu, cycles_other %lu\n",
+//            id, thr_count, data_not_ready, cycles_hashing, cycles_other);
+// #else
+//     printf("Hasher %ld thr %ld: data_not_ready %ld\n",
+//            id, thr_count, data_not_ready);
+// #endif
   }
 
   // Perform the coordinator functions
@@ -601,7 +602,7 @@ public:
       completed_node += COORD_BATCH_SIZE;
     }
 
-    printf("Coordinator %ld: data_not_ready %ld\n", id, data_not_ready);
+    // printf("Coordinator %ld: data_not_ready %ld\n", id, data_not_ready);
     system.coordinator_node[id].store(completed_node);
 
     if (id == 0) {

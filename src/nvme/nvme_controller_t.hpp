@@ -51,8 +51,9 @@ public:
       if (!spdk_nvme_ns_is_active(ns)) {
         continue;
       }
-      auto it = namespaces.emplace(namespaces.end(), ns);
-      it->print();
+      namespaces.emplace(namespaces.end(), ns);
+      //auto it = namespaces.emplace(namespaces.end(), ns);
+      //it->print();
     }
     return 0;
   }
@@ -71,7 +72,7 @@ public:
     struct spdk_nvme_io_qpair_opts opts;
     spdk_nvme_ctrlr_get_default_io_qpair_opts(ctrlr, &opts, sizeof(opts));
     opts.io_queue_requests = queue_size;
-    printf("Allocating %d io_queue_requests\n", opts.io_queue_requests);
+    //printf("Allocating %d io_queue_requests\n", opts.io_queue_requests);
     opts.delay_cmd_submit = true;
 
     for (size_t i = 0; i < count; i++) {
@@ -202,7 +203,7 @@ class nvme_controllers_t  {
                         const struct spdk_nvme_ctrlr_opts* opts) {
     nvme_controllers_t* me = (nvme_controllers_t* )cb_ctx;
     
-    printf("Attached to %s\n", trid->traddr);
+    //printf("Attached to %s\n", trid->traddr);
     
     // spdk_nvme_ctrlr is the logical abstraction in SPDK for an NVMe
     // controller.  During initialization, the IDENTIFY data for the

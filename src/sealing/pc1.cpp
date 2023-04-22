@@ -110,20 +110,21 @@ int main(int argc, char** argv) {
 
   // Construct a set of NVMEs to use for sealing
   set<string> allowed_nvme;
-  // WD black
+  allowed_nvme.insert("0000:29:00.0");
   allowed_nvme.insert("0000:2a:00.0");
   allowed_nvme.insert("0000:2b:00.0");
   allowed_nvme.insert("0000:2c:00.0");
-  allowed_nvme.insert("0000:2d:00.0");
-  allowed_nvme.insert("0000:61:00.0");
   allowed_nvme.insert("0000:62:00.0");
   allowed_nvme.insert("0000:63:00.0");
   allowed_nvme.insert("0000:64:00.0");
-  // Samsung
+  allowed_nvme.insert("0000:65:00.0");
   allowed_nvme.insert("0000:01:00.0");
   allowed_nvme.insert("0000:02:00.0");
   allowed_nvme.insert("0000:03:00.0");
   allowed_nvme.insert("0000:04:00.0");
+  allowed_nvme.insert("0000:41:00.0");
+  allowed_nvme.insert("0000:43:00.0");
+  allowed_nvme.insert("0000:44:00.0");
   
   assert (allowed_nvme.size() == NUM_CONTROLLERS);
 
@@ -136,10 +137,6 @@ int main(int argc, char** argv) {
   controllers.init(2); // qpairs
   controllers.sort();
   
-  printf("Layer disks\n");
-  for (size_t i = 0; i < controllers.size(); i++) {
-    printf("  %s\n", controllers[i].get_name().c_str());
-  }
   if (controllers.size() != NUM_CONTROLLERS) {
     printf("ERROR: only %ld controllers found, expected %ld\n",
            controllers.size(), NUM_CONTROLLERS);
@@ -152,7 +149,7 @@ int main(int argc, char** argv) {
   atomic<bool> terminator(false);
 
   node_id_t node_start = NODE_COUNT * 0;
-  //node_id_t node_stop(NODE_COUNT * 1 + NODE_COUNT / 32);
+  //node_id_t node_stop(NODE_COUNT * 0 + NODE_COUNT / 32);
   node_id_t node_stop(NODE_COUNT * 11);
 
   printf("Hashing node %lx to node %lx\n", node_start.id(), node_stop.id());
@@ -268,6 +265,7 @@ int main(int argc, char** argv) {
       sector += topology.coordinators[coord_id].num_sectors();
     }
     
+    timestamp_t start = std::chrono::high_resolution_clock::now();
     size_t core_num = 2;
     printf("Setting affinity for orchestrator_t to core %ld\n", core_num);
     set_core_affinity(core_num);
@@ -284,6 +282,11 @@ int main(int argc, char** argv) {
     terminator = true;
     ch.recv(); // rw handler
     ch.recv(); // node_writer handler
+
+    timestamp_t stop = std::chrono::high_resolution_clock::now();
+    uint64_t secs = std::chrono::duration_cast<
+      std::chrono::seconds>(stop - start).count();
+    printf("Sealing took %ld seconds\n", secs);
 
   } else if (mode == READ_MODE) {
     // Read and print a hashed node

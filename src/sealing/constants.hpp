@@ -120,7 +120,7 @@ const size_t NODES_PER_HASHER  = 2;   // Number of nodes to calculate per hashin
 const size_t HASHERS_PER_CORE  = 2;   // Number of hashing threads per core
 
 // Number of NVME controllers for layer storage
-const size_t NUM_CONTROLLERS   = 12;
+const size_t NUM_CONTROLLERS   = 15;
 // Number of pages per layer per controller when striped (rounded up)
 const size_t PAGES_PER_LAYER_PER_CONTROLLER = ((PAGES_PER_LAYER + NUM_CONTROLLERS - 1) /
                                                NUM_CONTROLLERS);

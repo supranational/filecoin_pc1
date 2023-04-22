@@ -19,6 +19,8 @@ We will specify a reference configuration with the final release of the software
 - 256GB Memory
 - 15 Samsung 7.68TB U.2 Drives
 - 4 Supermicro AOC-SLG4-4E4T NVMe HBA 
+- Ubuntu 22.04
+- SPDK v22.09
 
 # Building
 
@@ -29,6 +31,20 @@ GRUB_CMDLINE_LINUX_DEFAULT="default_hugepagesz=1G hugepagesz=1G hugepages=128"
 GRUB_CMDLINE_LINUX="default_hugepagesz=1G hugepagesz=1G hugepages=128"
 sudo update-grub
 sudo reboot
+```
+
+You can confirm huge pages are enabled with:
+```
+grep Huge /proc/meminfo
+
+# Look for:
+HugePages_Total:     128
+HugePages_Free:      128
+```
+
+Additionally uou may need to enable huge pages after boot using:
+```
+sudo sysctl -w vm.nr_hugepages=128
 ```
 
 Due to the random reads, if the page table was built with 4KB pages then there would be a significant number of costly faults. Moving to 1GB pages alleviates this problem.
@@ -45,12 +61,12 @@ We use blst for the general SHA-256 function when calcuating the replica_id.
 
 ### Build [SPDK](https://spdk.io/doc/getting_started.html) in the Parent Directory:
 ```
-git clone https://github.com/spdk/spdk --recursive
-cd spdk/
+git clone --branch v22.09 https://github.com/spdk/spdk spdk --recursive spdk-v22.09
+cd spdk-v22.09/
 sudo scripts/pkgdep.sh
 ./configure --with-virtio --with-vhost
 make
-sudo ./scripts/setup.sh
+sudo env NRHUGE=128 ./scripts/setup.sh
 ```
 
 SPDK is used for directly controlling the NVMe drives.
@@ -58,6 +74,11 @@ SPDK is used for directly controlling the NVMe drives.
 ### Update NVMe Controller Addresses in [/src/sealing/pc1.cpp](/src/sealing/pc1.cpp#L113):
 
 SPDK can be used to identify attached NVMe devices and their addresses with the following command:
+```
+sudo ./scripts/setup.sh status
+```
+
+For more extensive information about attached devices:
 ```
 sudo ./build/examples/identify
 ```

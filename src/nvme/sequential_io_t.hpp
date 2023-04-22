@@ -23,20 +23,16 @@ class sequential_io_t {
 public:
   sequential_io_t(nvme_controller_t& _controller):
     controller(_controller) {
+    // Allocate io trackers
+    SPDK_ASSERT(cb_pool.create(nvme_controller_t::queue_size));
+    SPDK_ASSERT(cb_pool.fill());
+    for (size_t i = 0; i < cb_pool.size(); i++) {
+      cb_pool[i].me = this;
+    }
   }
 
   // buf must be pages sized and pinned
   int rw(bool read, size_t pages, uint8_t *buf, size_t offset = 0) {
-    // Allocate io trackers
-    SPDK_ERROR(cb_pool.create(nvme_controller_t::queue_size));
-    SPDK_ERROR(cb_pool.fill());
-    for (size_t i = 0; i < cb_pool.size(); i++) {
-      cb_pool[i].me = this;
-    }
-    printf("Allocated trackers size %ld\n", cb_pool.size());
-    
-    timestamp_t start = chrono::high_resolution_clock::now();
-
     size_t page = 0;
     while (page < pages) {
       // Initiate ops
@@ -46,7 +42,7 @@ public:
           break;
         }
         cb->io.buf = &(buf[page * PAGE_SIZE]);
-        if (read ){
+        if (read){
           SPDK_ERROR(controller.read(&cb->io, 0, 0, page + offset,
                                      completion_cb, cb));
         } else {
@@ -59,17 +55,6 @@ public:
       controller.process_completions(0);
     }
     controller.process_all_completions(0);
-    
-    timestamp_t stop = std::chrono::high_resolution_clock::now();
-          
-    uint64_t ms = std::chrono::duration_cast<
-      std::chrono::milliseconds>(stop - start).count();
-    uint64_t mbytes = (pages * BLOCK_SIZE) >> 20;
-    printf("IO took %ld ms for %ld pages / %ld MB (%0.2lf MB/s), "
-           "%0.2lf IOPs\n",
-           ms, pages, mbytes, 
-           (double)mbytes / ((double)ms / 1000.0),
-           (double)pages / ((double)ms / 1000.0));
     return 0;
   }
 };
