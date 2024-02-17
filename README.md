@@ -42,7 +42,7 @@ HugePages_Total:     128
 HugePages_Free:      128
 ```
 
-Additionally uou may need to enable huge pages after boot using:
+Additionally you may need to enable huge pages after boot using:
 ```
 sudo sysctl -w vm.nr_hugepages=128
 ```
