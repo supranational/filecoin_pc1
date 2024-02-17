@@ -61,7 +61,7 @@ We use blst for the general SHA-256 function when calcuating the replica_id.
 
 ### Build [SPDK](https://spdk.io/doc/getting_started.html) in the Parent Directory:
 ```
-git clone --branch v22.09 https://github.com/spdk/spdk spdk --recursive spdk-v22.09
+git clone --branch spdk-v22.09 --recursive https://github.com/spdk/spdk.git
 cd spdk-v22.09/
 sudo scripts/pkgdep.sh
 ./configure --with-virtio --with-vhost
